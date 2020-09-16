@@ -1,0 +1,59 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.firebase.crashlytics'
+
+android {
+    compileSdkVersion versions.compileSdk
+
+    defaultConfig {
+        applicationId "com.google.firebase.codelab.friendlychat"
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
+    }
+}
+
+dependencies {
+    implementation "com.google.android.material:material:$versions.material"
+    implementation "androidx.appcompat:appcompat:$versions.appcompat"
+    implementation "androidx.legacy:legacy-support-v4:$versions.legacy_support"
+    implementation "androidx.media:media:$versions.media"
+
+    // Image
+    implementation "com.github.bumptech.glide:glide:$versions.glide"
+    implementation "de.hdodenhof:circleimageview:$versions.circleimageview"
+
+    // Google
+    implementation "com.google.android.gms:play-services-auth:$versions.play_services_auth"
+
+    // Firebase
+    implementation platform("com.google.firebase:firebase-bom:$versions.firebase_bom")
+    implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.google.firebase:firebase-auth'
+
+    // Firebase UI
+    implementation "com.firebaseui:firebase-ui-database:$versions.firebase_ui_database"
+
+    // Testing dependencies
+    testImplementation "junit:junit:$versions.junit"
+    androidTestImplementation "junit:junit:$versions.junit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso_core"
+    androidTestImplementation "androidx.test:runner:$versions.test_runner"
+    androidTestImplementation "androidx.test:rules:$versions.test_runner"
+    androidTestImplementation "androidx.annotation:annotation:$versions.test_annotation"
+}
+
+apply plugin: 'com.google.gms.google-services'
