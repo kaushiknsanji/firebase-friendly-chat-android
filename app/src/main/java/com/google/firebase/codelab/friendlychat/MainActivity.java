@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright Google Inc. All Rights Reserved.
  * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
  */
 package com.google.firebase.codelab.friendlychat;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,6 +34,8 @@ import android.widget.TextView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -61,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
     private EditText mMessageEditText;
     private ImageView mAddMessageImageView;
 
+    // Firebase instance variables
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +75,22 @@ public class MainActivity extends AppCompatActivity {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
+
+        // Initialize Firebase Auth
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        if (mFirebaseUser == null) {
+            // User is Not signed-in, launch the Sign In Activity
+            startActivity(new Intent(this, SignInActivity.class));
+            finish();
+            return;
+        } else {
+            // User is signed-in, load the logged-in user information
+            mUsername = mFirebaseUser.getDisplayName();
+            if (mFirebaseUser.getPhotoUrl() != null) {
+                mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
+            }
+        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -121,13 +144,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Firebase instance variables
-
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in.
-        // TODO: Add code to check if user is signed in.
     }
 
     @Override
@@ -154,7 +173,22 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.sign_out_menu:
+                // Sign-Out user from the backend and identity provider
+                mFirebaseAuth.signOut();
+                mSignInClient.signOut();
+
+                // Change username back to anonymous
+                mUsername = ANONYMOUS;
+
+                // Start the SignInActivity and finish the current activity
+                startActivity(new Intent(this, SignInActivity.class));
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
