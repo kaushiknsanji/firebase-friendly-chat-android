@@ -19,19 +19,26 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.codelab.friendlychat.databinding.ActivityMainBinding;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -58,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
+    private FirebaseDatabase mFirebaseDatabase;
+    private FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder> mFirebaseRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +95,52 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         mSignInClient = GoogleSignIn.getClient(this, gso);
 
+        // Initialize Realtime Database
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        // Get the reference to the "messages" child node to be observed for changes
+        DatabaseReference messagesRef = mFirebaseDatabase.getReference().child(MESSAGES_CHILD);
+
+        // Configure the options required for FirebaseRecyclerAdapter with the above Query reference
+        FirebaseRecyclerOptions<FriendlyMessage> options = new FirebaseRecyclerOptions.Builder<FriendlyMessage>()
+                .setQuery(messagesRef, FriendlyMessage.class)
+                // Listen to the changes in the Query and automatically update to the UI
+                .setLifecycleOwner(this)
+                .build();
+
+        // Construct the FirebaseRecyclerAdapter with the options set
+        mFirebaseRecyclerAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder>(options) {
+            @NonNull
+            @Override
+            public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                return new MessageViewHolder(
+                        LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_message, parent, false)
+                );
+            }
+
+            @Override
+            protected void onBindViewHolder(@NonNull MessageViewHolder holder, int position, @NonNull FriendlyMessage message) {
+                mBinding.progressBar.setVisibility(ProgressBar.INVISIBLE);
+                holder.bindMessage(message);
+            }
+        };
+
         // Initialize LinearLayoutManager and RecyclerView
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(true);
         mBinding.messageRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mBinding.messageRecyclerView.setAdapter(mFirebaseRecyclerAdapter);
 
-        mBinding.progressBar.setVisibility(ProgressBar.INVISIBLE);
+        // Register an observer for watching changes in the Adapter data in order to scroll
+        // to the bottom of the list when the user is at the bottom of the list
+        // in order to show newly added messages
+        mFirebaseRecyclerAdapter.registerAdapterDataObserver(
+                new ScrollToBottomObserver(
+                        mBinding.messageRecyclerView,
+                        mFirebaseRecyclerAdapter,
+                        mLinearLayoutManager
+                )
+        );
 
         mBinding.messageEditText.addTextChangedListener(new ButtonObserver(mBinding.sendButton));
 
