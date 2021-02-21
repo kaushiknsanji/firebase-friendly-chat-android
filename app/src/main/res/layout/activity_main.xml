@@ -14,7 +14,8 @@
         android:id="@+id/messageRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/linearLayout" />
+        android:layout_above="@+id/linearLayout"
+        tools:listitem="@layout/item_message" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -33,6 +34,7 @@
         <EditText
             android:id="@+id/messageEditText"
             android:layout_width="0dp"
+            android:inputType="textLongMessage"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1" />
@@ -43,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:enabled="false"
-            android:text="SEND" />
+            android:text="@string/label_button_main_send" />
 
     </LinearLayout>
 
