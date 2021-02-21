@@ -2,4 +2,11 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Spacing between items in the main list -->
+    <dimen name="main_item_list_spacing">12dp</dimen>
+
+    <!-- Spacing between items and its parent in the main list -->
+    <dimen name="main_item_parent_spacing">2dp</dimen>
+
 </resources>

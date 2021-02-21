@@ -130,6 +130,10 @@ public class MainActivity extends AppCompatActivity {
         mLinearLayoutManager.setStackFromEnd(true);
         mBinding.messageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mBinding.messageRecyclerView.setAdapter(mFirebaseRecyclerAdapter);
+        mBinding.messageRecyclerView.addItemDecoration(new VerticalListItemSpacingDecoration(
+                getResources().getDimensionPixelSize(R.dimen.main_item_list_spacing),
+                getResources().getDimensionPixelSize(R.dimen.main_item_parent_spacing)
+        ));
 
         // Register an observer for watching changes in the Adapter data in order to scroll
         // to the bottom of the list when the user is at the bottom of the list
