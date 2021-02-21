@@ -1,6 +1,7 @@
 package com.google.firebase.codelab.friendlychat;
 
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -26,14 +27,18 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindMessage(FriendlyMessage friendlyMessage) {
-        if (friendlyMessage.getText() != null) {
-            // If it is a Text based message
+        if (friendlyMessage.getText() != null && !TextUtils.isEmpty(friendlyMessage.getText())) {
+            // If it contains a text message
             mBinding.messageTextView.setText(friendlyMessage.getText());
             mBinding.messageTextView.setVisibility(View.VISIBLE);
-            mBinding.messageImageView.setVisibility(View.GONE);
+        } else {
+            // If it does not contain any text message
+            mBinding.messageTextView.setText("");
+            mBinding.messageTextView.setVisibility(View.GONE);
+        }
 
-        } else if (friendlyMessage.getImageUrl() != null) {
-            // If it is an Image based message
+        if (friendlyMessage.getImageUrl() != null) {
+            // If it contains an Image
 
             // Read the Image URL
             String imageUrl = friendlyMessage.getImageUrl();
@@ -44,7 +49,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
                 // Get the Storage Reference pointing to the Image URL
                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
 
-                // Asynchronously retrieve the downloadable Image via its task
+                // Asynchronously retrieve the downloadable URL to Image via its task
                 storageReference.getDownloadUrl()
                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
@@ -70,8 +75,22 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
                         .into(mBinding.messageImageView);
             }
 
-            mBinding.messageTextView.setVisibility(View.GONE);
             mBinding.messageImageView.setVisibility(View.VISIBLE);
+
+        } else {
+            // If it does not contain any Image
+            mBinding.messageImageView.setVisibility(View.GONE);
         }
+
+        // On both messages
+
+        // Set the messenger's profile picture
+        GlideApp.with(mBinding.getRoot().getContext())
+                .load(friendlyMessage.getPhotoUrl())
+                .fallback(R.drawable.ic_account_circle_black_36dp)
+                .into(mBinding.messengerImageView);
+
+        // Set the messenger's name
+        mBinding.messengerTextView.setText(friendlyMessage.getName());
     }
 }
