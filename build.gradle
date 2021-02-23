@@ -29,7 +29,7 @@ buildscript {
     // Firebase
     versions.crashlytics = '2.4.1'
     versions.firebase_bom = '26.4.0'
-    versions.firebase_ui_database = '7.1.1'
+    versions.firebase_ui = '7.1.1'
 
     // Testing library dependencies
     versions.junit = '4.13.1'

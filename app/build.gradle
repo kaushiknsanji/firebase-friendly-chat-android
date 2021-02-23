@@ -54,7 +54,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
 
     // FirebaseUI Database
-    implementation "com.firebaseui:firebase-ui-database:$versions.firebase_ui_database"
+    implementation "com.firebaseui:firebase-ui-database:$versions.firebase_ui"
+
+    // FirebaseUI Storage
+    implementation "com.firebaseui:firebase-ui-storage:$versions.firebase_ui"
 
     // Testing dependencies
     testImplementation "junit:junit:$versions.junit"

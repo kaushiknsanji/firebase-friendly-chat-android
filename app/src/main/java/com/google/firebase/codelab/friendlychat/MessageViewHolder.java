@@ -1,12 +1,8 @@
 package com.google.firebase.codelab.friendlychat;
 
-import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.codelab.friendlychat.databinding.ItemMessageBinding;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -49,24 +45,11 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
                 // Get the Storage Reference pointing to the Image URL
                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
 
-                // Asynchronously retrieve the downloadable URL to Image via its task
-                storageReference.getDownloadUrl()
-                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                // On Success, load the Image into View using Glide
-                                GlideApp.with(mBinding.messageImageView.getContext())
-                                        .load(uri)
-                                        .into(mBinding.messageImageView);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // On Failure, log the exception as warning
-                                Log.w(TAG, "Reading Image from URL was unsuccessful", e);
-                            }
-                        });
+                // Download the Image into View directly from StorageReference using Glide
+                GlideApp.with(mBinding.messageImageView.getContext())
+                        .load(storageReference)
+                        .into(mBinding.messageImageView);
+
             } else {
                 // If the Image URL is not from Firebase Cloud Storage,
                 // then load the Image from URL into ImageView directly using Glide
