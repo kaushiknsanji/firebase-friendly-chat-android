@@ -12,12 +12,18 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildFeatures {
+        viewBinding true
+    }
+
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE-FIREBASE.txt'
@@ -33,6 +39,9 @@ dependencies {
 
     // Image
     implementation "com.github.bumptech.glide:glide:$versions.glide"
+    annotationProcessor "com.github.bumptech.glide:compiler:$versions.glide"
+
+    // CircleImageView
     implementation "de.hdodenhof:circleimageview:$versions.circleimageview"
 
     // Google
@@ -44,8 +53,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage'
     implementation 'com.google.firebase:firebase-auth'
 
-    // Firebase UI
-    implementation "com.firebaseui:firebase-ui-database:$versions.firebase_ui_database"
+    // FirebaseUI Database
+    implementation "com.firebaseui:firebase-ui-database:$versions.firebase_ui"
 
     // Testing dependencies
     testImplementation "junit:junit:$versions.junit"
