@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright Google Inc. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,17 @@
  */
 package com.google.firebase.codelab.friendlychat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
+import com.google.firebase.codelab.friendlychat.databinding.ActivitySignInBinding;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
@@ -30,22 +33,22 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
 
-    private SignInButton mSignInButton;
-
+    private ActivitySignInBinding mBinding;
     private GoogleSignInClient mSignInClient;
 
-    // Firebase instance variables
+    // TODO: Firebase instance variables
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
 
-        // Assign fields
-        mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        // Inflate with ViewBinding
+        mBinding = ActivitySignInBinding.inflate(getLayoutInflater());
+        // Set the root view from ViewBinding instance
+        setContentView(mBinding.getRoot());
 
         // Set click listeners
-        mSignInButton.setOnClickListener(this);
+        mBinding.signInButton.setOnClickListener(this);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -54,14 +57,37 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 .build();
         mSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // Initialize FirebaseAuth
+        // TODO: Initialize FirebaseAuth
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sign_in_button:
-                break;
+    public void onClick(View view) {
+        if (view.getId() == R.id.sign_in_button) {
+            // Initiate the Sign-In process when Google Sign-In button is clicked
+            signIn();
         }
     }
+
+    /**
+     * Method that initiates the Sign-In process with Google
+     */
+    private void signIn() {
+        // TODO: Initiate the Sign-In process with Google
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // TODO: Implement
+    }
+
+    /**
+     * Method that authenticates the signed-in Google {@code account} with Firebase.
+     *
+     * @param account {@link GoogleSignInAccount} instance containing the signed-in account information
+     */
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        // TODO: Implement
+    }
+
 }

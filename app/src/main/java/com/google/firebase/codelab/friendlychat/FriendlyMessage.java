@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright Google Inc. All Rights Reserved.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,9 @@
  */
 package com.google.firebase.codelab.friendlychat;
 
+/**
+ * Model class that represents a node in the "messages" child of Firebase RTDB.
+ */
 public class FriendlyMessage {
 
     private String id;
