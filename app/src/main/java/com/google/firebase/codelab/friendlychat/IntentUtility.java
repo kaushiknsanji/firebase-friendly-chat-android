@@ -4,6 +4,11 @@ import android.content.Intent;
 
 import androidx.activity.ComponentActivity;
 
+/**
+ * Utility class for {@link Intent}s used in the app to launch implicit intents.
+ *
+ * @author Kaushik N Sanji
+ */
 public class IntentUtility {
 
     public static void launchGallery(ComponentActivity fromActivity, int requestCode) {

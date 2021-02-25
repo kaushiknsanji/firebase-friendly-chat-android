@@ -10,6 +10,10 @@ import com.google.firebase.storage.StorageReference;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * {@link RecyclerView.ViewHolder} subclass for the message items displayed
+ * in the RecyclerView of {@link MainActivity}
+ */
 public class MessageViewHolder extends RecyclerView.ViewHolder {
 
     // Constant used for Logs

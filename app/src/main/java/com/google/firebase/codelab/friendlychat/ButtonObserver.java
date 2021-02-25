@@ -5,6 +5,10 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.Button;
 
+/**
+ * {@link TextWatcher} subclass to enable the provided {@link Button} when the Text entered
+ * in the input field is not empty.
+ */
 public class ButtonObserver implements TextWatcher {
 
     private final Button mButton;
