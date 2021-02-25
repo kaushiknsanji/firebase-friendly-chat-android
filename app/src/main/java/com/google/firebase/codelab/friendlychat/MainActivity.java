@@ -71,12 +71,10 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient mSignInClient;
 
     private ActivityMainBinding mBinding;
-    private LinearLayoutManager mLinearLayoutManager;
 
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabase mFirebaseDatabase;
-    private FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder> mFirebaseRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         // Construct the FirebaseRecyclerAdapter with the options set
-        mFirebaseRecyclerAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder>(options) {
+        FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder>(options) {
             @NonNull
             @Override
             public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -134,10 +132,10 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // Initialize LinearLayoutManager and RecyclerView
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mLinearLayoutManager.setStackFromEnd(true);
-        mBinding.messageRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mBinding.messageRecyclerView.setAdapter(mFirebaseRecyclerAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        mBinding.messageRecyclerView.setLayoutManager(linearLayoutManager);
+        mBinding.messageRecyclerView.setAdapter(firebaseRecyclerAdapter);
         mBinding.messageRecyclerView.addItemDecoration(new VerticalListItemSpacingDecoration(
                 getResources().getDimensionPixelSize(R.dimen.main_item_list_spacing),
                 getResources().getDimensionPixelSize(R.dimen.main_item_parent_spacing)
@@ -146,11 +144,11 @@ public class MainActivity extends AppCompatActivity {
         // Register an observer for watching changes in the Adapter data in order to scroll
         // to the bottom of the list when the user is at the bottom of the list
         // in order to show newly added messages
-        mFirebaseRecyclerAdapter.registerAdapterDataObserver(
+        firebaseRecyclerAdapter.registerAdapterDataObserver(
                 new ScrollToBottomObserver(
                         mBinding.messageRecyclerView,
-                        mFirebaseRecyclerAdapter,
-                        mLinearLayoutManager
+                        firebaseRecyclerAdapter,
+                        linearLayoutManager
                 )
         );
 
